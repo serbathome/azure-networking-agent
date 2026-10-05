@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "maintenance": {
+    "correlationWindowMinutes": 15,
+    "storage": {
+      "enabled": false,
+      "accountName": "",
+      "tableName": "",
+      "columns": {
+        "provider": "Provider",
+        "eventId": "EventId",
+        "startTime": "StartTime",
+        "endTime": "EndTime",
+        "status": "Status",
+        "circuitId": "CircuitId",
+        "resourceId": "ResourceId"
+      }
+    }
+  }
+}
