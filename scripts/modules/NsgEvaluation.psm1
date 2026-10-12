@@ -195,8 +195,7 @@ function Get-NsgRuleDecision {
         [ValidateSet('Tcp', 'Udp', 'Icmp', 'Any')]
         [string] $Protocol,
         [Nullable[int]] $SourcePort,
-        [Parameter(Mandatory)]
-        [int] $DestinationPort,
+        [Nullable[int]] $DestinationPort,
         [string[]] $VirtualNetworkPrefixes = @()
     )
 

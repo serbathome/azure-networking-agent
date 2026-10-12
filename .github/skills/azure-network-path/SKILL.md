@@ -1,6 +1,6 @@
 ---
 name: azure-network-path
-description: Analyze an Azure IP flow across both endpoint NICs, VNet topology, bidirectional NSGs, and forward and return routes. Use for Azure connectivity incidents with source IP, destination IP, protocol, port, and incident time.
+description: Analyze Azure private IP connectivity, NSG denies, effective routes, routing, and VNet paths across two endpoint NICs. Use for incidents with source IP, destination IP, protocol, and incident time.
 ---
 
 # Azure network path analysis
@@ -21,6 +21,10 @@ Collect all of these values before execution:
 
 Collect the Azure subscription ID when known. If omitted, the script searches
 the Azure Resource Graph scope visible to the signed-in identity.
+
+The destination port is not used for `Icmp`. For `Any`, omit the port to
+evaluate protocol-independent rules; port-specific rules may make the result
+inconclusive.
 
 Translate application protocols to their network parameters only when
 unambiguous. For example, SSH normally means TCP/22. Confirm the translation

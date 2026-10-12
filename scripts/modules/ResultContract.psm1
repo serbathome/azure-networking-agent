@@ -11,15 +11,22 @@ function New-Evidence {
         [Parameter(Mandatory)]
         [string] $Observation,
 
-        [DateTimeOffset] $ObservedAt = [DateTimeOffset]::UtcNow
+        [DateTimeOffset] $ObservedAt = [DateTimeOffset]::UtcNow,
+
+        [Collections.IDictionary] $Details
     )
 
-    return [pscustomobject] [ordered] @{
+    $evidence = [ordered] @{
         source = $Source
         resourceId = $ResourceId
         observation = $Observation
         observedAt = $ObservedAt.ToUniversalTime().ToString('o')
     }
+    if ($null -ne $Details) {
+        $evidence.details = [pscustomobject] $Details
+    }
+
+    return [pscustomobject] $evidence
 }
 
 function New-ToolResult {

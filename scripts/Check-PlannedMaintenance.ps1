@@ -89,7 +89,16 @@ try {
             -Source ([string] $match.provider) `
             -ResourceId ([string] $match.sourceReference) `
             -Observation $observation `
-            -ObservedAt $incident
+            -ObservedAt $incident `
+            -Details ([ordered] @{
+                eventId = [string] $match.eventId
+                provider = [string] $match.provider
+                startTime = [string] $match.startTime
+                endTime = [string] $match.endTime
+                status = [string] $match.status
+                affectedResources = @($match.affectedResources)
+                affectedCircuits = @($match.affectedCircuits)
+            })
     }
 
     $stopwatch.Stop()

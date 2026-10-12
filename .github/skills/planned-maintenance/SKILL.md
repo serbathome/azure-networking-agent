@@ -1,6 +1,6 @@
 ---
 name: planned-maintenance
-description: Correlate a network incident with Azure and external planned-maintenance records. Use when an incident includes a timestamp and maintenance could explain missing or unstable connectivity.
+description: Correlate Azure, ExpressRoute, provider, or circuit incidents with planned-maintenance records. Use when a timestamped outage, packet loss, or unstable connectivity could overlap maintenance.
 ---
 
 # Planned maintenance correlation
@@ -11,7 +11,7 @@ records or from general Azure knowledge.
 
 ## Required input
 
-- Incident timestamp or time window with an explicit time zone.
+- Incident timestamp with an explicit time zone.
 
 Collect these values when available:
 
@@ -23,6 +23,10 @@ Collect these values when available:
 Never invent a missing identifier. A resource or circuit hint improves
 correlation but is not required.
 
+For a supplied start and end time, use the midpoint as `IncidentTime` and half
+the range, rounded up to whole minutes, as `WindowMinutes`. Confirm this
+conversion with the user before execution.
+
 ## Approved command
 
 Run only `scripts/Check-PlannedMaintenance.ps1`. Pass values as separate
@@ -33,7 +37,8 @@ PowerShell parameters using the call operator.
   -IncidentTime '2026-10-05T10:15:00+02:00' `
   -SubscriptionId '00000000-0000-0000-0000-000000000000' `
   -ResourceId '/subscriptions/.../providers/...' `
-  -CircuitId 'circuit-123'
+  -CircuitId 'circuit-123' `
+  -WindowMinutes 15
 ```
 
 Omit optional parameters that the user did not provide. Do not pass empty

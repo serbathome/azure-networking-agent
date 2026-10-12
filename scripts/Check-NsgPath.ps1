@@ -13,8 +13,7 @@ param(
     [ValidateSet('Tcp', 'Udp', 'Icmp', 'Any')]
     [string] $Protocol,
 
-    [Parameter(Mandatory)]
-    [int] $DestinationPort,
+    [Nullable[int]] $DestinationPort,
 
     [string] $SubscriptionId,
 
@@ -99,7 +98,12 @@ try {
     $incident = ConvertTo-IncidentTime -Value $IncidentTime
     $sourceAddress = Assert-IpAddress -Value $SourceIp -ParameterName SourceIp
     $destinationAddress = Assert-IpAddress -Value $DestinationIp -ParameterName DestinationIp
-    [void] (Assert-Port -Value $DestinationPort -ParameterName DestinationPort)
+    if ($Protocol -in @('Tcp', 'Udp') -and $null -eq $DestinationPort) {
+        throw "DestinationPort is required when Protocol is '$Protocol'."
+    }
+    if ($null -ne $DestinationPort) {
+        [void] (Assert-Port -Value $DestinationPort -ParameterName DestinationPort)
+    }
     [void] (Get-PocConfiguration -Path $ConfigPath)
     Assert-AzureCliAuthenticated
 
@@ -220,7 +224,7 @@ try {
                 $stages.Add((New-PathStage `
                     -Name $nsgCheck.name `
                     -Status $status `
-                    -Summary "$($nsgCheck.direction) rule '$($decision.rule.name)' at priority $($decision.rule.priority) returned '$access' for $Protocol/$DestinationPort." `
+                    -Summary "$($nsgCheck.direction) rule '$($decision.rule.name)' at priority $($decision.rule.priority) returned '$access' for $(if ($null -eq $DestinationPort) { $Protocol } else { "$Protocol/$DestinationPort" })." `
                     -ResourceId ([string] $decision.rule.networkSecurityGroupId)))
             }
             else {
